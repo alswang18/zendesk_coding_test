@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "zendesk_coding_test"
+version = "0.1.0"
+description = "Zendesk coding challenge Summer 2022"
+authors = ["Alec Wang <asw15@sfu.ca>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.2.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+black = "^21.11b1"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+bandit = "^1.7.1"
+safety = "^1.10.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
