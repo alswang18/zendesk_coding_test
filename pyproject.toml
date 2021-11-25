@@ -7,6 +7,7 @@ authors = ["Alec Wang <asw15@sfu.ca>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = "^3.2.9"
+django-tailwind = "^2.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
