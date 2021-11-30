@@ -59,6 +59,9 @@
 												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 													Priority
 												</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Status
+												</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -68,10 +71,10 @@
 											{% for ticket in tickets %}
 											<tr class="bg-white" id="">
 												<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-													<a href="/ticket/{{ticket.id}}">{{ ticket.id }}</a>
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">{{ ticket.id }}</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">{% if ticket.type %}
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">{% if ticket.type %}
 													{{ ticket.type }}
 													{% else %}
 													-
@@ -79,13 +82,13 @@
 													</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">{{ ticket.created_at|naturaltime}}</a>
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">{{ ticket.created_at|naturaltime}}</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">{{ticket.updated_at|naturaltime}}</a>
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">{{ticket.updated_at|naturaltime}}</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">
 													{% if ticket.subject is not None %}
 													{{ ticket.subject }}
 													{% else %}
@@ -94,9 +97,18 @@
 													</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">
 													{% if ticket.priority %}
 													{{ ticket.priority }}
+													{% else %}
+													-
+													{% endif %}
+													</a>
+												</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}?page={{current_page}}">
+													{% if ticket.status %}
+													{{ ticket.status }}
 													{% else %}
 													-
 													{% endif %}

@@ -26,4 +26,3 @@ RUN apt-get update \
 RUN poetry config virtualenvs.create false
 RUN poetry install
 COPY . .
-RUN make run

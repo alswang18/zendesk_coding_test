@@ -49,6 +49,7 @@ def create_ticket_list_context(page=1):
         + str(PER_PAGE)
         + "&page="
         + str(current_page)
+        + "&sort_by=status"
     )
     ZENDESK_USER = os.environ.get("ZENDESK_USER")
 
@@ -76,6 +77,7 @@ def create_ticket_list_context(page=1):
         context["prev_page"] = page - 1
         context["has_more"] = ceil(ticket_count() / PER_PAGE) > page
         context["next_page"] = page + 1
+        context["current_page"] = page
         context["max"] = ceil(ticket_count() / PER_PAGE)
     except Exception:
         context["error"] = True

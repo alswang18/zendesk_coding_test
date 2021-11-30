@@ -3,7 +3,8 @@ import traceback
 import requests
 from django.shortcuts import render
 import datetime
-from .utils import create_ticket_list_context, get_group_name, get_user_name
+from math import ceil
+from .utils import create_ticket_list_context, get_group_name, get_user_name, PER_PAGE
 
 
 # detail-type view
@@ -43,6 +44,7 @@ def ticket(request, ticket_id):
         )
         context["ticket"]["updated_at"] =  datetime.datetime.strptime(context["ticket"]["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
         context["ticket"]["created_at"] =  datetime.datetime.strptime(context["ticket"]["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+        context["back_value"] = request.GET.get("page", 1)
     except Exception:
         context["error"] = True
         context[

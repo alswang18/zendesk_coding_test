@@ -7,20 +7,19 @@ from ticket.utils import create_ticket_list_context, get_group_name, get_user_na
 
 
 class ListingPageTest(TestCase):
-    def test_get_list(self):
-        for i in range(0, 1000, 200):
-            response = self.client.get("/?page="+i)
-            self.assertEqual(response.status_code, 200)
-            self.assertTemplateUsed(response, "ticket_list.html")
+    def test_get_list_view(self):
+        response = self.client.get("/?page="+i)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "ticket_list.html")
 
-    def test_get_detail(self):
+    def test_get_detail_view(self):
         response = self.client.get("/ticket/1")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "ticket.html")
 
 
 def test_utility():
-    # specific to applicant's contezt
+    # specific to applicant's context
     assert get_group_name(4411238137236) is not None
     assert get_user_name(421994449552) is not None
     assert not create_ticket_list_context()["error"]
