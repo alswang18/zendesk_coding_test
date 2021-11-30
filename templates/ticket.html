@@ -8,18 +8,19 @@
 		<title>Zendesk Ticket Viewer</title>
 	</head>
 	<body>
-        <header class="text-gray-400 bg-gray-900 body-font">
-            <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-              <a href="/" class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
-                <svg xmlns="https://upload.wikimedia.org/wikipedia/commons/c/c8/Zendesk_logo.svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                </svg>
-                <span class="ml-3 text-xl"><a href="/">Zendesk Coding Challenge</a></span>
-              </a>
-              <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-              </nav>
-            </div>
-          </header>
+		<header class="text-gray-400 bg-gray-900 body-font">
+			<div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+				<a href="/?page=1" class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
+					<svg xmlns="https://upload.wikimedia.org/wikipedia/commons/c/c8/Zendesk_logo.svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
+						<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+					</svg>
+					<span class="ml-3 text-xl">
+				<a href="/">Zendesk Coding Challenge</a></span>
+				</a>
+				<nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+				</nav>
+			</div>
+		</header>
 		<section class="text-gray-600 body-font">
 			{% if error %}
 			<p> {{ error_message }} </p>
@@ -48,7 +49,7 @@
 							<span class="title-font font-medium">Type -> <b>{% if ticket.type %}{{ ticket.type }}{% else %}-{% endif %}</b></span>
 						</div>
 					</div>
-                    <div class="p-2 sm:w-1/2 w-full">
+					<div class="p-2 sm:w-1/2 w-full">
 						<div class="bg-gray-100 rounded flex p-4 h-full items-center">
 							<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
 								<path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
@@ -84,7 +85,7 @@
 							<span class="title-font font-medium">Requester Name -> <b>{% if ticket.requester_name is not None %}{{ ticket.requester_name }}{% else %}-{% endif %}</b></span>
 						</div>
 					</div>
-                    <div class="p-2 sm:w-1/2 w-full">
+					<div class="p-2 sm:w-1/2 w-full">
 						<div class="bg-gray-100 rounded flex p-4 h-full items-center">
 							<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
 								<path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
@@ -93,7 +94,7 @@
 							<span class="title-font font-medium">Tags -> <b>{% if ticket.tags is not None %}{{ ticket.tags }}{% else %}-{% endif %}</b></span>
 						</div>
 					</div>
-                    <div class="p-2 sm:w-1/2 w-full">
+					<div class="p-2 sm:w-1/2 w-full">
 						<div class="bg-gray-100 rounded flex p-4 h-full items-center">
 							<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" class="text-indigo-500 w-6 h-6 flex-shrink-0 mr-4" viewBox="0 0 24 24">
 								<path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
@@ -108,4 +109,3 @@
 		</section>
 	</body>
 </html>
-

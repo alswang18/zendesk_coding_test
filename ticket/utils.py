@@ -1,7 +1,10 @@
 import os
 import traceback
+from math import ceil
 
 import requests
+
+PER_PAGE = 25
 
 
 def get_group_name(group_id):
@@ -28,12 +31,25 @@ def get_user_name(user_id):
         return None
 
 
-def create_ticket_list_context(page=""):
+def ticket_count():
     ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    if page == "":
-        ZENDESK_URL = os.environ.get("ZENDESK_URL") + "/api/v2/tickets/?page[size]=25"
-    else:
-        ZENDESK_URL = page
+    ZENDESK_URL = os.environ.get("ZENDESK_URL") + "/api/v2/tickets/count.json"
+    ZENDESK_USER = os.environ.get("ZENDESK_USER")
+    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD)).json()
+    return int(response["count"]["value"])
+
+
+def create_ticket_list_context(page=1):
+    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+    # bounds the current page to 1-ceil(ticket_count/25)
+    current_page = min(ceil(ticket_count() / PER_PAGE), max(int(page), 1))
+    ZENDESK_URL = (
+        os.environ.get("ZENDESK_URL")
+        + "/api/v2/tickets.json?per_page="
+        + str(PER_PAGE)
+        + "&page="
+        + str(current_page)
+    )
     ZENDESK_USER = os.environ.get("ZENDESK_USER")
 
     response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
@@ -53,8 +69,11 @@ def create_ticket_list_context(page=""):
     try:
         resp = response.json()
         context["tickets"] = resp["tickets"]
-        context["has_more"] = bool(resp["meta"]["has_more"])
-        context["links_next"] = resp["links"]["next"]
+        context["has_less"] = page > 1
+        context["prev_page"] = page - 1
+        context["has_more"] = ceil(ticket_count() / 2) > page
+        context["next_page"] = page + 1
+        context["max"] = ceil(ticket_count() / 2)
     except Exception:
         context["error"] = True
         context[

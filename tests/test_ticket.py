@@ -4,7 +4,6 @@ from django.shortcuts import reverse
 from django.test import TestCase
 
 from ticket.utils import create_ticket_list_context, get_group_name, get_user_name
-from ticket.views import create_ticket_list_context
 
 
 class ListingPageTest(TestCase):
@@ -23,7 +22,8 @@ def test_utility():
     # specific to applicant's contezt
     assert get_group_name(4411238137236) is not None
     assert get_user_name(421994449552) is not None
-    assert not create_ticket_list_context()['error']
+    assert not create_ticket_list_context()["error"]
+
 
 def test_bad_auth(monkeypatch):
     envs = {

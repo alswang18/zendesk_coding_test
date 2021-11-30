@@ -55,5 +55,5 @@ def ticket(request, ticket_id):
 
 # list-type view
 def ticket_list(request):
-    page = request.GET.get("page", "")
+    page = int(request.GET.get("page", 1))
     return render(request, "ticket_list.html", create_ticket_list_context(page))
