@@ -1,19 +1,20 @@
 import logging
-
+import os
 import requests
 from django.shortcuts import render
-
-from ticket_viewer.settings import ZENDESK_PASSWORD, ZENDESK_URL, ZENDESK_USER
-
-logger = logging.getLogger(__name__)
-
 
 # list-type view
 def ticket_list(request):
     page_num = request.GET.get("page", "1")
+    return render(request, "ticket_list.html", create_ticket_list_context(page_num))
+
+def create_ticket_list_context(page_num):
+    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+    ZENDESK_URL = os.environ.get("ZENDESK_URL")
+    ZENDESK_USER = os.environ.get("ZENDESK_USER")
 
     response = requests.get(
-        ZENDESK_URL + "?page=" + page_num, auth=(ZENDESK_USER, ZENDESK_PASSWORD)
+        ZENDESK_URL + "?page=" + str(page_num), auth=(ZENDESK_USER, ZENDESK_PASSWORD)
     )
 
     context = dict()
@@ -41,5 +42,4 @@ def ticket_list(request):
                 error stack {err}.\nTry again in a few minutes or contact 
                 asw15@sfu.ca for assistance.
             """
-
-    return render(request, "ticket_list.html", context)
+    return context
