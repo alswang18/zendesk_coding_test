@@ -1,3 +1,4 @@
+{% load humanize %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -78,10 +79,10 @@
 													</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">{{ ticket.created_at }}</a>
+													<a href="/ticket/{{ticket.id}}">{{ ticket.created_at|naturaltime}}</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-													<a href="/ticket/{{ticket.id}}">{{ ticket.updated_at }}</a>
+													<a href="/ticket/{{ticket.id}}">{{ticket.updated_at|naturaltime}}</a>
 												</td>
 												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 													<a href="/ticket/{{ticket.id}}">

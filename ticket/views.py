@@ -1,9 +1,8 @@
 import os
 import traceback
-
 import requests
 from django.shortcuts import render
-
+import datetime
 from .utils import create_ticket_list_context, get_group_name, get_user_name
 
 
@@ -37,10 +36,13 @@ def ticket(request, ticket_id):
     try:
         resp = response.json()
         context["ticket"] = resp["ticket"]
+
         context["ticket"]["group_name"] = get_group_name(resp["ticket"]["group_id"])
         context["ticket"]["requester_name"] = get_user_name(
             resp["ticket"]["requester_id"]
         )
+        context["ticket"]["updated_at"] =  datetime.datetime.strptime(context["ticket"]["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
+        context["ticket"]["created_at"] =  datetime.datetime.strptime(context["ticket"]["created_at"], "%Y-%m-%dT%H:%M:%SZ")
     except Exception:
         context["error"] = True
         context[

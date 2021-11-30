@@ -1,7 +1,7 @@
 import os
 import traceback
 from math import ceil
-
+import datetime
 import requests
 
 PER_PAGE = 25
@@ -69,11 +69,14 @@ def create_ticket_list_context(page=1):
     try:
         resp = response.json()
         context["tickets"] = resp["tickets"]
+        for ticket in context["tickets"]:
+            ticket["updated_at"] =  datetime.datetime.strptime(ticket["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
+            ticket["created_at"] =  datetime.datetime.strptime(ticket["created_at"], "%Y-%m-%dT%H:%M:%SZ")
         context["has_less"] = page > 1
         context["prev_page"] = page - 1
-        context["has_more"] = ceil(ticket_count() / 2) > page
+        context["has_more"] = ceil(ticket_count() / PER_PAGE) > page
         context["next_page"] = page + 1
-        context["max"] = ceil(ticket_count() / 2)
+        context["max"] = ceil(ticket_count() / PER_PAGE)
     except Exception:
         context["error"] = True
         context[

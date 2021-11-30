@@ -8,9 +8,10 @@ from ticket.utils import create_ticket_list_context, get_group_name, get_user_na
 
 class ListingPageTest(TestCase):
     def test_get_list(self):
-        response = self.client.get(reverse("ticket_list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "ticket_list.html")
+        for i in range(0, 1000, 200):
+            response = self.client.get("/?page="+i)
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, "ticket_list.html")
 
     def test_get_detail(self):
         response = self.client.get("/ticket/1")
