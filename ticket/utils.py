@@ -1,7 +1,8 @@
+import datetime
 import os
 import traceback
 from math import ceil
-import datetime
+
 import requests
 
 PER_PAGE = 25
@@ -35,13 +36,30 @@ def ticket_count():
     ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
     ZENDESK_URL = os.environ.get("ZENDESK_URL") + "/api/v2/tickets/count.json"
     ZENDESK_USER = os.environ.get("ZENDESK_USER")
-    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD)).json()
-    return int(response["count"]["value"])
+    try:
+        response = requests.get(
+            ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD)
+        ).json()
+        return int(response["count"]["value"])
+    except Exception:
+        return None
 
 
 def create_ticket_list_context(page=1):
     ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    # bounds the current page to 1-ceil(ticket_count/25)
+    context = dict()
+    context["error"] = False
+    count = ticket_count()
+    if count is None:
+        context["error"] = True
+        context[
+            "error_message"
+        ] = """
+                😅 Ticket count is currently unavailanle.
+                That means the API may not be available.
+                Try again in a few minutes or contact asw15@sfu.ca for assistance.
+            """
+        return context
     current_page = min(ceil(ticket_count() / PER_PAGE), max(int(page), 1))
     ZENDESK_URL = (
         os.environ.get("ZENDESK_URL")
@@ -55,8 +73,6 @@ def create_ticket_list_context(page=1):
 
     response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
 
-    context = dict()
-    context["error"] = False
     if response.status_code != 200:
         context["error"] = True
         context[
@@ -71,14 +87,72 @@ def create_ticket_list_context(page=1):
         resp = response.json()
         context["tickets"] = resp["tickets"]
         for ticket in context["tickets"]:
-            ticket["updated_at"] =  datetime.datetime.strptime(ticket["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
-            ticket["created_at"] =  datetime.datetime.strptime(ticket["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+            ticket["updated_at"] = datetime.datetime.strptime(
+                ticket["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
+            )
+            ticket["created_at"] = datetime.datetime.strptime(
+                ticket["created_at"], "%Y-%m-%dT%H:%M:%SZ"
+            )
         context["has_less"] = page > 1
         context["prev_page"] = page - 1
-        context["has_more"] = ceil(ticket_count() / PER_PAGE) > page
+        context["has_more"] = ceil(count / PER_PAGE) > page
         context["next_page"] = page + 1
         context["current_page"] = page
-        context["max"] = ceil(ticket_count() / PER_PAGE)
+        context["max"] = ceil(count / PER_PAGE)
+    except Exception:
+        context["error"] = True
+        context[
+            "error_message"
+        ] = f"""
+                😅 Something unexpected went wrong. Here's the 
+                error stack {traceback.format_exc()}. Try again in a few minutes or contact 
+                asw15@sfu.ca for assistance.
+            """
+    return context
+
+
+def create_ticket_detail_context(page=1, ticket_id=1):
+    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+    ZENDESK_USER = os.environ.get("ZENDESK_USER")
+    ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/tickets/{ticket_id}"
+    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
+    context = dict()
+    context["error"] = False
+    if response.status_code == 404:
+        context["error"] = True
+        context[
+            "error_message"
+        ] = """
+                😅 This ticket does not exist.
+                If you think this is wrong, contact asw15@sfu.ca for assistance.
+            """
+        return context
+    if response.status_code != 200:
+        context["error"] = True
+        context[
+            "error_message"
+        ] = f"""
+                😅 This GET request came back with code {response.status_code}.
+                That means your tickets may not be available.
+                Try again in a few minutes or contact asw15@sfu.ca for assistance.
+            """
+        return context
+    try:
+        resp = response.json()
+        context["ticket"] = resp["ticket"]
+
+        context["ticket"]["group_name"] = get_group_name(resp["ticket"]["group_id"])
+        context["ticket"]["requester_name"] = get_user_name(
+            resp["ticket"]["requester_id"]
+        )
+
+        context["ticket"]["updated_at"] = datetime.datetime.strptime(
+            context["ticket"]["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
+        )
+        context["ticket"]["created_at"] = datetime.datetime.strptime(
+            context["ticket"]["created_at"], "%Y-%m-%dT%H:%M:%SZ"
+        )
+        context["back_value"] = page
     except Exception:
         context["error"] = True
         context[
