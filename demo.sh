@@ -1,5 +1,5 @@
 #!/bin/bash
-read -r -p "Do you want to enter your details in the cli rather than using an env? [y/N] " response
+read -r -p "Do you want to enter your details in the cli rather than using an the .env file? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY])
         read -r -p "Enter variable for ZENDESK_URL: " zendesk_url

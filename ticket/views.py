@@ -1,45 +1,59 @@
-import logging
 import os
+import traceback
+
 import requests
 from django.shortcuts import render
 
-# list-type view
-def ticket_list(request):
-    page_num = request.GET.get("page", "1")
-    return render(request, "ticket_list.html", create_ticket_list_context(page_num))
+from .utils import create_ticket_list_context, get_group_name, get_user_name
 
-def create_ticket_list_context(page_num):
+
+# detail-type view
+def ticket(request, ticket_id):
     ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    ZENDESK_URL = os.environ.get("ZENDESK_URL")
     ZENDESK_USER = os.environ.get("ZENDESK_USER")
-
-    response = requests.get(
-        ZENDESK_URL + "?page=" + str(page_num), auth=(ZENDESK_USER, ZENDESK_PASSWORD)
-    )
-
+    ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/tickets/{ticket_id}"
+    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
     context = dict()
     context["error"] = False
+    if response.status_code == 404:
+        context["error"] = True
+        context[
+            "error_message"
+        ] = """
+                😅 This ticket does not exist.
+                If you think this is wrong, contact asw15@sfu.ca for assistance.
+            """
+        return render(request, "ticket.html", context)
     if response.status_code != 200:
         context["error"] = True
         context[
             "error_message"
         ] = f"""
-                😅 This GET request came back with code {response.status_code}.\n
-                That means your tickets may not be available.\n
+                😅 This GET request came back with code {response.status_code}.
+                That means your tickets may not be available.
                 Try again in a few minutes or contact asw15@sfu.ca for assistance.
             """
-
+        return render(request, "ticket.html", context)
     try:
         resp = response.json()
-        context["tickets"] = resp["tickets"]
-
-    except Exception as err:
+        context["ticket"] = resp["ticket"]
+        context["ticket"]["group_name"] = get_group_name(resp["ticket"]["group_id"])
+        context["ticket"]["requester_name"] = get_user_name(
+            resp["ticket"]["requester_id"]
+        )
+    except Exception:
         context["error"] = True
         context[
             "error_message"
         ] = f"""
                 😅 Something unexpected went wrong. Here's the 
-                error stack {err}.\nTry again in a few minutes or contact 
+                error stack {traceback.format_exc()}. Try again in a few minutes or contact 
                 asw15@sfu.ca for assistance.
             """
-    return context
+    return render(request, "ticket.html", context)
+
+
+# list-type view
+def ticket_list(request):
+    page = request.GET.get("page", "")
+    return render(request, "ticket_list.html", create_ticket_list_context(page))

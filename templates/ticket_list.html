@@ -1,87 +1,115 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <title>Zendesk Ticket Viewer</title>
-</head>
-<body>
-    <div class="max-w-7xl mx-auto">
-        <section class="text-gray-700 body-font">
-            <div class="container px-5 py-24 mx-auto flex flex-wrap">
-                <div class="flex flex-col w-full">
-                    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Subject
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Requested At
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Updated At
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Subject
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Priority
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if error %}
-                                <p> {{ error_message }} </p>
-                                {% else %}
-                                    {% for ticket in tickets %}
-                                        <tr class="bg-white">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                {{ ticket.id }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ ticket.subject }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ ticket.created_at }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ ticket.updated_at }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {% if ticket.subject is not None %}
-                                                    {{ ticket.subject }}
-                                                {% else %}
-                                                    -
-                                                {% endif %}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {% if ticket.priority %}
-                                                    {{ ticket.priority }}
-                                                {% else %}
-                                                    -
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+		<title>Zendesk Ticket Viewer</title>
+	</head>
+	<body>
+        <header class="text-gray-400 bg-gray-900 body-font">
+            <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+              <a href="/" class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
+                <svg xmlns="https://upload.wikimedia.org/wikipedia/commons/c/c8/Zendesk_logo.svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ml-3 text-xl">Zendesk Coding Challenge</span>
+              </a>
+              <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+              </nav>
+              {% if has_more %}
+                <button onclick="location.href='/?page={{links_next}}'" class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">Next Page
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+              {% else %}
+              {% endif %}
             </div>
-        </section>
-    </div>
-</body>
+          </header>
+		<div class="max-w-7xl mx-auto">
+			<section class="text-gray-700 body-font">
+				<div class="container px-5 py-24 mx-auto flex flex-wrap">
+					<div class="flex flex-col w-full">
+						<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+							<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+								<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+									<table class="min-w-full divide-y divide-gray-200">
+										<thead class="bg-gray-50">
+											<tr>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													ID
+												</th>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Type
+												</th>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Requested At
+												</th>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Updated At
+												</th>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Subject
+												</th>
+												<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													Priority
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% if error %}
+											<p> {{ error_message }} </p>
+											{% else %}
+											{% for ticket in tickets %}
+											<tr class="bg-white" id="">
+												<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+													<a href="/ticket/{{ticket.id}}">{{ ticket.id }}</a>
+												</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}">{% if ticket.type %}
+													{{ ticket.type }}
+													{% else %}
+													-
+													{% endif %}
+													</a>
+												</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}">{{ ticket.created_at }}</a>
+												</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}">{{ ticket.updated_at }}</a>
+												</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}">
+													{% if ticket.subject is not None %}
+													{{ ticket.subject }}
+													{% else %}
+													-
+													{% endif %}
+													</a>
+												</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+													<a href="/ticket/{{ticket.id}}">
+													{% if ticket.priority %}
+													{{ ticket.priority }}
+													{% else %}
+													-
+													{% endif %}
+													</a>
+												</td>
+											</tr>
+											{% endfor %}
+											{% endif %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</body>
 </html>

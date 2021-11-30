@@ -20,7 +20,14 @@ test:
 run:
 	poetry run python manage.py runserver 0.0.0.0:8000
 
-.PHONY: demo-script
-demo-script:
+.PHONY: demo-script-run
+demo-script-run:
 	chmod +x demo.sh
 	./demo.sh
+	make run
+
+.PHONY: demo-script-test
+demo-script-test:
+	chmod +x demo.sh
+	./demo.sh
+	make test

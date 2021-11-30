@@ -7,14 +7,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 USE_DOT_ENV = bool(os.getenv("USE_DOT_ENV", True))
 
 if USE_DOT_ENV:
-    from dotenv import load_dotenv, find_dotenv
+    from dotenv import find_dotenv, load_dotenv
+
     load_dotenv(find_dotenv())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-(0$=#^8m-h6!r8^xy1ez3y+g(@2li2-7*cltd(-w!v9=an_zvp")
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-(0$=#^8m-h6!r8^xy1ez3y+g(@2li2-7*cltd(-w!v9=an_zvp"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", True)
@@ -70,17 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "ticket_viewer.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -99,6 +91,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
