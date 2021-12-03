@@ -2,6 +2,10 @@
 
 ## Configure /ZENDESK_CODING_TEST/ticket_viewer/.env.template!
 
+### Deployed example:
+
+[http://3.96.80.18:8004/](http://3.96.80.18:8004/?page=1)
+
 ## Run within Container
 
 ### Prerequisites
@@ -12,12 +16,14 @@
 ### Run the following Script
 
 ```bash
-docker-compose --build up
+docker-compose up --build -d
 ```
 
 Go to localhost:8004
 
-### Run within Ubuntu or WSL-Ubuntu
+## Run within Ubuntu or WSL-Ubuntu
+
+### Prerequisites
 
 - Python (^3.8)
 - Poetry
@@ -44,3 +50,9 @@ make demo-script-run
 [localhost:8000](http://localhost:8000) [list view]
 
 [localhost:8000/ticket/<int:ticket_id>](http://localhost:8000/ticket/<int:ticket_id>) [detail view]
+
+HTML Templates Sourced and Inspired by the wonderful people at [Tailblocks](https://web.archive.org/web/20211115132515/https://tailblocks.cc/).
+
+```bash
+
+```
