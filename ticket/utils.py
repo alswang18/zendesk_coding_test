@@ -54,7 +54,7 @@ def create_ticket_list_context(page=1):
         context[
             "error_message"
         ] = """
-                😅 Ticket count is currently unavailanle.
+                😅 Ticket count is currently unavailable.
                 That means the API may not be available.
                 Try again in a few minutes or contact asw15@sfu.ca for assistance.
             """
