@@ -2,10 +2,12 @@ import datetime
 import os
 import traceback
 from math import ceil
+
 import requests
 
 # offset per paginated request
 PER_PAGE = 25
+
 
 def get_group_name(group_id):
     try:
