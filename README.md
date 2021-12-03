@@ -36,11 +36,17 @@ apt-get update && apt-get -y install netcat gcc make && apt-get clean
 pip install poetry==1.1.11
 poetry install
 
+# This repo runs a lot of scripts using the Makefile, so please read it to understand 
+# what these commands do
 # just run tests, can put .env details in CLI if you don't want to configure it.
 make demo-script-test
 
 # run the app, can put .env details in CLI if you don't want to configure it.
 make demo-script-run
+
+# before committing changes, run the following and make sure everything passes
+make pre-commit
+make test
 ```
 
 **Go to localhost:8000**
@@ -52,6 +58,10 @@ make demo-script-run
 [localhost:8000/ticket/<int:ticket_id>](http://localhost:8000/ticket/<int:ticket_id>) [detail view]
 
 HTML Templates Sourced and Inspired by the wonderful people at [Tailblocks](https://web.archive.org/web/20211115132515/https://tailblocks.cc/).
+
+Current output of make test command
+
+![Untitled](Readme%20for%20Zendesk%20Coding%20ccdc0c1fed584c07ab08111f0fe49b3f/Untitled.png)
 
 ```bash
 
