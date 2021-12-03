@@ -2,11 +2,10 @@ import datetime
 import os
 import traceback
 from math import ceil
-
 import requests
 
+# offset per paginated request
 PER_PAGE = 25
-
 
 def get_group_name(group_id):
     ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
@@ -67,7 +66,6 @@ def create_ticket_list_context(page=1):
         + str(PER_PAGE)
         + "&page="
         + str(current_page)
-        + "&sort_by=status"
     )
     ZENDESK_USER = os.environ.get("ZENDESK_USER")
 
@@ -93,12 +91,14 @@ def create_ticket_list_context(page=1):
             ticket["created_at"] = datetime.datetime.strptime(
                 ticket["created_at"], "%Y-%m-%dT%H:%M:%SZ"
             )
-        context["has_less"] = page > 1
-        context["prev_page"] = page - 1
+        context["has_less"] = current_page > 1
+        context["prev_page"] = current_page - 1
         context["has_more"] = ceil(count / PER_PAGE) > page
-        context["next_page"] = page + 1
-        context["current_page"] = page
+        context["next_page"] = current_page + 1
+        context["current_page"] = current_page
         context["max"] = ceil(count / PER_PAGE)
+        context["count_in_page"] = len(context["tickets"])
+        context["count_all"] = count
     except Exception:
         context["error"] = True
         context[
