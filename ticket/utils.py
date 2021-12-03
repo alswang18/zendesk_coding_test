@@ -8,11 +8,11 @@ import requests
 PER_PAGE = 25
 
 def get_group_name(group_id):
-    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    ZENDESK_USER = os.environ.get("ZENDESK_USER")
-    ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/groups/{group_id}"
-    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
     try:
+        ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+        ZENDESK_USER = os.environ.get("ZENDESK_USER")
+        ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/groups/{group_id}"
+        response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
         resp = response.json()
         return resp["group"]["name"]
     except Exception:
@@ -20,11 +20,11 @@ def get_group_name(group_id):
 
 
 def get_user_name(user_id):
-    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    ZENDESK_USER = os.environ.get("ZENDESK_USER")
-    ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/users/{user_id}"
-    response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
     try:
+        ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+        ZENDESK_USER = os.environ.get("ZENDESK_USER")
+        ZENDESK_URL = os.environ.get("ZENDESK_URL") + f"/api/v2/users/{user_id}"
+        response = requests.get(ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD))
         resp = response.json()
         return resp["user"]["name"]
     except Exception:
@@ -32,10 +32,10 @@ def get_user_name(user_id):
 
 
 def ticket_count():
-    ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
-    ZENDESK_URL = os.environ.get("ZENDESK_URL") + "/api/v2/tickets/count.json"
-    ZENDESK_USER = os.environ.get("ZENDESK_USER")
     try:
+        ZENDESK_PASSWORD = os.environ.get("ZENDESK_PASSWORD")
+        ZENDESK_URL = os.environ.get("ZENDESK_URL") + "/api/v2/tickets/count.json"
+        ZENDESK_USER = os.environ.get("ZENDESK_USER")
         response = requests.get(
             ZENDESK_URL, auth=(ZENDESK_USER, ZENDESK_PASSWORD)
         ).json()
