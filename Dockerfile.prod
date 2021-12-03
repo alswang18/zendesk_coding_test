@@ -26,5 +26,4 @@ RUN apt-get update \
 RUN poetry config virtualenvs.create false
 RUN poetry install
 COPY . .
-COPY ./ticket_viewer/.env ./
 CMD poetry run python manage.py runserver 0.0.0.0:8000
